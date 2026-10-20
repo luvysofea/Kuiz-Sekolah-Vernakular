@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Misi Muzium: Sekolah Vernakular</title>
+<style>
+:root{--navy:#17324d;--cream:#fff8e9;--gold:#e9b85b;--ink:#243447;--green:#2d785c;--red:#b94b4b;--lav:#eee9fa}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#f7ecd8,#e6f0ec);color:var(--ink);min-height:100vh}
+header{background:var(--navy);color:white;padding:25px 18px;text-align:center;border-bottom:6px solid var(--gold)}
+header .eyebrow{letter-spacing:2px;text-transform:uppercase;font-size:.8rem;color:#f7d995;font-weight:bold}
+h1{margin:8px 0;font-size:clamp(1.7rem,4vw,2.6rem)}
+header p{margin:8px auto 0;max-width:720px;line-height:1.5}
+.wrap{max-width:900px;margin:24px auto;padding:0 16px 35px}
+.panel{background:#fffdf8;border:1px solid #eadfc9;border-radius:20px;padding:clamp(18px,4vw,30px);box-shadow:0 10px 28px #17324d12}
+.stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;margin-bottom:18px}
+.pill{background:#f3ead8;border-radius:999px;padding:9px 14px;font-weight:bold;font-size:.92rem}
+.progress{height:10px;background:#e8e4dc;border-radius:20px;overflow:hidden;margin:12px 0 24px}
+#bar{height:100%;width:0;background:linear-gradient(90deg,#3d9775,#e9b85b);transition:width .3s}
+.kicker{color:var(--green);font-weight:bold;font-size:.9rem;text-transform:uppercase;letter-spacing:1px}
+h2{color:var(--navy);margin:8px 0 14px;font-size:clamp(1.25rem,3vw,1.7rem)}
+#question{font-size:1.15rem;line-height:1.55;font-weight:700;margin:15px 0 20px}
+.answers{display:grid;gap:11px}
+.answer{border:2px solid #d8e0e4;border-radius:13px;background:white;padding:14px 16px;text-align:left;font-size:1rem;line-height:1.4;cursor:pointer;color:var(--ink);transition:.15s}
+.answer:hover:not(:disabled){border-color:#3d9775;transform:translateY(-1px);background:#f4fbf7}
+.answer:focus-visible,button:focus-visible{outline:3px solid #e9b85b;outline-offset:3px}
+.answer:disabled{cursor:default}
+.answer.correct{border-color:var(--green);background:#e7f5ed}
+.answer.wrong{border-color:var(--red);background:#fff0ef}
+#feedback{min-height:56px;margin-top:16px;padding:12px 14px;border-radius:12px;line-height:1.5;background:#f5f1e8}
+#feedback.good{background:#e7f5ed;color:#20583f}
+#feedback.bad{background:#fff0ef;color:#843636}
+.actions{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;margin-top:18px}
+button.primary,button.secondary{border:0;border-radius:12px;padding:13px 18px;font-weight:bold;font-size:1rem;cursor:pointer}
+.primary{background:var(--navy);color:white}.primary:hover{background:#254968}
+.secondary{background:#efe7d8;color:var(--navy)}.secondary:hover{background:#e6d7bd}
+#next{margin-left:auto}
+.intro{text-align:center}
+.badge{font-size:3rem;margin-bottom:4px}
+.intro p{line-height:1.65;max-width:680px;margin:12px auto}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:22px 0}
+.rule{background:#f5f0e5;padding:15px;border-radius:14px;text-align:left;line-height:1.45}
+.rule b{display:block;color:var(--navy);margin-bottom:5px}
+.hide{display:none!important}
+.review{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:10px;text-align:left}
+.review li{padding:12px;background:#f5f0e5;border-radius:12px;line-height:1.5}
+footer{text-align:center;font-size:.85rem;color:#526273;padding:0 16px 24px}
+.small{font-size:.9rem;color:#5d6875}
+@media(max-width:520px){.stats{justify-content:flex-start}.answer{padding:13px}.actions button{width:100%}#next{margin-left:0}}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Muzium Maya • Jejak Sejarah</div>
+  <h1>🏫 Misi Sekolah Vernakular</h1>
+  <p>Terokai ciri sekolah Melayu, Cina, Tamil dan Inggeris di Tanah Melayu semasa zaman British.</p>
+</header>
+<main class="wrap">
+  <section id="start" class="panel intro">
+    <div class="badge">🧭📚</div>
+    <div class="kicker">Cabaran sejarah interaktif</div>
+    <h2>Adakah kamu bersedia menjadi Penjelajah Sejarah?</h2>
+    <p>Jawab 10 soalan pilihan berganda untuk mengumpul mata dan membuka lencana Penjelajah Pendidikan. Baca maklum balas selepas setiap jawapan untuk mengukuhkan pemahaman.</p>
+    <div class="rules">
+      <div class="rule"><b>🎯 Misi</b>Jawab 10 soalan tentang empat aliran sekolah vernakular.</div>
+      <div class="rule"><b>⭐ Mata</b>Jawapan betul mendapat 10 mata. Tiada mata ditolak.</div>
+      <div class="rule"><b>💡 Petunjuk</b>Setiap soalan memberi penerangan ringkas selepas dijawab.</div>
+    </div>
+    <button class="primary" id="startBtn">Mula Misi →</button>
+  </section>
+
+  <section id="game" class="panel hide" aria-live="polite">
+    <div class="stats">
+      <span class="pill" id="counter">Soalan 1/10</span>
+      <span class="pill">⭐ Mata: <span id="score">0</span></span>
+      <span class="pill" id="streak">🧠 Teruskan!</span>
+    </div>
+    <div class="progress" aria-label="Kemajuan misi"><div id="bar"></div></div>
+    <div class="kicker" id="category">Kategori</div>
+    <h2 id="question">Soalan akan muncul di sini</h2>
+    <div class="answers" id="answers"></div>
+    <div id="feedback" role="status">Pilih satu jawapan.</div>
+    <div class="actions">
+      <button class="secondary" id="quitBtn">Kembali ke mula</button>
+      <button class="primary" id="next" disabled>Soalan seterusnya →</button>
+    </div>
+  </section>
+
+  <section id="result" class="panel intro hide">
+    <div class="badge" id="resultIcon">🏆</div>
+    <div class="kicker">Misi selesai</div>
+    <h2 id="resultTitle">Syabas, Penjelajah Sejarah!</h2>
+    <p id="resultText"></p>
+    <div class="rules">
+      <div class="rule"><b>⭐ Skor akhir</b><span id="finalScore">0/100</span></div>
+      <div class="rule"><b>✅ Jawapan betul</b><span id="finalCorrect">0/10</span></div>
+      <div class="rule"><b>🎖️ Lencana</b><span id="medal">Penjelajah Muda</span></div>
+    </div>
+    <h2>Semak semula fakta penting</h2>
+    <ul class="review" id="review"></ul>
+    <div class="actions">
+      <button class="secondary" id="homeBtn">Halaman mula</button>
+      <button class="primary" id="againBtn">Main semula ↻</button>
+    </div>
+    <p class="small">Nota: Ciri sekolah boleh berbeza mengikut tempat, tempoh dan pihak pengelola. Permainan ini ialah ringkasan pengenalan.</p>
+  </section>
+</main>
+<footer>Dibina untuk pembelajaran sejarah pendidikan • Gunakan sebagai aktiviti pengukuhan dalam Google Sites.</footer>
+<script>
+const questions = [
+ {cat:"Sekolah Melayu",q:"Apakah bahasa pengantar utama di sekolah Melayu pada zaman British?",opts:["Bahasa Melayu","Bahasa Tamil","Bahasa Inggeris sahaja","Bahasa Cina"],a:0,why:"Sekolah Melayu menggunakan bahasa Melayu sebagai bahasa pengantar dan memberi penekanan kepada kemahiran asas."},
+ {cat:"Sekolah Melayu",q:"Di kawasan manakah sekolah Melayu biasanya banyak ditemui?",opts:["Kawasan luar bandar dan kampung","Kawasan lombong sahaja","Pelabuhan antarabangsa sahaja","Kawasan ladang teh sahaja"],a:0,why:"Sekolah Melayu banyak berkembang di kawasan kampung dan luar bandar, walaupun keadaan berbeza mengikut tempat."},
+ {cat:"Sekolah Cina",q:"Siapakah yang banyak membantu menubuhkan dan menyokong sekolah Cina?",opts:["Komuniti dan persatuan masyarakat Cina","Tentera British sahaja","Semua sekolah Melayu","Syarikat kereta api sahaja"],a:0,why:"Komuniti, persatuan dan penderma memainkan peranan penting dalam perkembangan sekolah Cina."},
+ {cat:"Sekolah Cina",q:"Apakah salah satu kepentingan sekolah Cina kepada masyarakatnya?",opts:["Mengekalkan bahasa dan budaya","Menghapuskan semua bahasa lain","Mengajar hanya pertanian","Melatih semua murid menjadi askar"],a:0,why:"Sekolah Cina membantu meneruskan penggunaan bahasa serta warisan budaya masyarakat Cina."},
+ {cat:"Sekolah Tamil",q:"Di manakah sekolah Tamil banyak berkembang pada zaman British?",opts:["Kawasan ladang, khususnya ladang getah","Di setiap istana sahaja","Di kawasan kutub","Di atas kapal perang"],a:0,why:"Sekolah Tamil banyak dikaitkan dengan kawasan ladang yang mempunyai pekerja berketurunan India."},
+ {cat:"Sekolah Tamil",q:"Apakah bahasa pengantar utama di sekolah Tamil?",opts:["Bahasa Tamil","Bahasa Melayu sahaja","Bahasa Jepun","Bahasa Arab"],a:0,why:"Bahasa Tamil digunakan sebagai bahasa pengantar utama dalam sekolah Tamil."},
+ {cat:"Sekolah Inggeris",q:"Apakah bahasa pengantar utama di sekolah Inggeris?",opts:["Bahasa Inggeris","Bahasa Tamil","Bahasa Cina","Bahasa Melayu sahaja"],a:0,why:"Sekolah Inggeris menggunakan bahasa Inggeris dan sebahagiannya dikendalikan oleh pihak kerajaan kolonial atau mubaligh."},
+ {cat:"Sekolah Inggeris",q:"Mengapakah pendidikan Inggeris dianggap memberi kelebihan kepada sesetengah murid?",opts:["Ia boleh membuka peluang ke pekerjaan pentadbiran dan profesional","Ia menjamin semua murid menjadi kaya","Ia hanya mengajar permainan","Ia menghapuskan keperluan belajar"],a:0,why:"Penguasaan bahasa Inggeris boleh membantu akses kepada pekerjaan tertentu, tetapi peluang pendidikan tidak sama rata."},
+ {cat:"Perbandingan",q:"Apakah ciri umum sistem pendidikan vernakular pada zaman British?",opts:["Aliran sekolah mempunyai bahasa pengantar dan pengalaman pendidikan yang berbeza","Semua murid belajar di sekolah yang sama dengan kurikulum seragam","Semua sekolah menggunakan bahasa Inggeris sahaja","Tiada sekolah berasaskan bahasa"],a:0,why:"Sekolah Melayu, Cina, Tamil dan Inggeris berbeza dari segi bahasa pengantar, lokasi, pengelolaan dan peluang pendidikan."},
+ {cat:"Laporan Pendidikan",q:"Apakah perbezaan utama yang sering dibincangkan antara Laporan Barnes dan Laporan Fenn-Wu (1951)?",opts:["Barnes mencadangkan sekolah kebangsaan; Fenn-Wu menekankan kepentingan pendidikan Cina","Kedua-duanya hanya membincangkan sekolah Tamil","Barnes mahu menutup semua sekolah; Fenn-Wu membincangkan sukan","Kedua-duanya diterbitkan pada tahun 1963"],a:0,why:"Laporan Barnes menekankan cadangan sekolah kebangsaan, manakala Fenn-Wu memberi perhatian kepada pendidikan masyarakat Cina dan kepentingan bahasa ibunda."}
+];
+let order=[], idx=0, score=0, correct=0, locked=false;
+const $=id=>document.getElementById(id);
+function shuffle(arr){return arr.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(p=>p[1]);}
+function show(id){["start","game","result"].forEach(x=>$(x).classList.toggle("hide",x!==id));}
+function begin(){order=shuffle([...questions]);idx=0;score=0;correct=0;locked=false;show("game");render();}
+function render(){
+ locked=false;const item=order[idx];
+ $("counter").textContent=`Soalan ${idx+1}/${order.length}`;
+ $("score").textContent=score;$("bar").style.width=`${idx/order.length*100}%`;
+ $("category").textContent=item.cat;$("question").textContent=item.q;
+ $("answers").innerHTML="";$("feedback").textContent="Pilih satu jawapan."; $("feedback").className="";
+ $("next").disabled=true;$("next").textContent=idx===order.length-1?"Lihat keputusan 🏆":"Soalan seterusnya →";
+ item.opts.forEach((opt,i)=>{const b=document.createElement("button");b.className="answer";b.textContent=String.fromCharCode(65+i)+". "+opt;b.addEventListener("click",()=>choose(i,b));$("answers").appendChild(b);});
+}
+function choose(i,btn){
+ if(locked)return;locked=true;const item=order[idx];const buttons=[...$("answers").children];
+ buttons.forEach((b,j)=>{b.disabled=true;if(j===item.a)b.classList.add("correct");});
+ if(i===item.a){score+=10;correct++;$("feedback").textContent="Betul! "+item.why;$("feedback").className="good";}
+ else{btn.classList.add("wrong");$("feedback").textContent="Belum tepat. Jawapan yang betul ialah "+String.fromCharCode(65+item.a)+". "+item.opts[item.a]+". "+item.why;$("feedback").className="bad";}
+ $("score").textContent=score;$("streak").textContent=i===item.a?"✨ Bagus!":"📘 Terus belajar!";
+ $("bar").style.width=`${(idx+1)/order.length*100}%`;$("next").disabled=false;
+}
+function finish(){
+ show("result");$("finalScore").textContent=score+"/100";$("finalCorrect").textContent=correct+"/10";
+ let medal=score>=90?"Pakar Sejarah 🥇":score>=70?"Penjelajah Hebat 🥈":score>=50?"Penjelajah Muda 🥉":"Penyiasat Sejarah 📚";
+ $("medal").textContent=medal;$("resultIcon").textContent=score>=70?"🏆":"📚";
+ $("resultTitle").textContent=score>=70?"Syabas, Penjelajah Sejarah!":"Teruskan usaha, Penjelajah!";
+ $("resultText").textContent=`Kamu memperoleh ${score} daripada 100 mata. Kamu menjawab ${correct} daripada 10 soalan dengan betul. ${score>=70?"Teruskan meneroka sejarah pendidikan!":"Baca semula fakta dan cuba sekali lagi untuk meningkatkan skor."}`;
+ $("review").innerHTML="";
+ questions.forEach((q,i)=>{const li=document.createElement("li");li.innerHTML=`<strong>${i+1}. ${q.cat}:</strong> ${q.why}`;$("review").appendChild(li);});
+}
+$("startBtn").addEventListener("click",begin);
+$("next").addEventListener("click",()=>{if(idx<order.length-1){idx++;render();}else finish();});
+$("quitBtn").addEventListener("click",()=>show("start"));
+$("homeBtn").addEventListener("click",()=>show("start"));
+$("againBtn").addEventListener("click",begin);
+</script>
+</body>
+</html>
